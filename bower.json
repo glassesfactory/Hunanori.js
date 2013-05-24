@@ -1,0 +1,10 @@
+{
+  "name": "Hunanori",
+  "version": "0.1.0",
+  "main": "dist/Hunanori.min.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}
