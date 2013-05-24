@@ -24,6 +24,8 @@ do(window)->
   Hunanori.INFO = Hunanori.LOG_LEVELS[0]
   Hunanori.ERROR = Hunanori.LOG_LEVELS[1]
   Hunanori.WARINING = Hunanori.LOG_LEVELS[2]
+
+  Hunanori.debug = true
   Hunanori.level = "info"
   Hunanori.logger = null
   Hunanori.prefix = null
