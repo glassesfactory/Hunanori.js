@@ -13,6 +13,12 @@ do(window)->
       if @.separator
         console.log @.separator
 
+    warn:(msg)=>
+      @log(msg, Hunanori.WARINING)
+
+    error:(msg)=>
+      @log(msg, Hunanori.ERROR)
+
   ###
   ---------
     meta
@@ -40,6 +46,12 @@ do(window)->
     Hunanori.doLogging(msg, level)
     if Hunanori.separator
       console.log Hunanori.separator
+
+  Hunanori.warn =(msg)=>
+    Hunanori.log(msg, Hunanori.WARINING)
+
+  Hunanori.error =(msg)=>
+    Hunanori.log(msg, Hunanori.ERROR)
 
   Hunanori.doLogging =(msg, level)->
     if level and Hunanori.level isnt level
