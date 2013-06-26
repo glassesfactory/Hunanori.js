@@ -14,6 +14,15 @@ module.exports = (grunt) ->
         src: ['*.coffee']
         dest: 'dist'
         ext: '.js'
+      example:
+        options:
+          bare: true
+        expand: true
+        cwd: 'example'
+        src: ['*.coffee']
+        dest: 'example'
+        ext: '.js'
+
 
     uglify:
       product:
@@ -22,8 +31,8 @@ module.exports = (grunt) ->
 
     watch:
       coffee:
-        files: ["src/coffee/*.coffee"]
-        tasks: ["coffee:product"]
+        files: ["src/coffee/*.coffee", "example/*.coffee"]
+        tasks: ["coffee:product", "coffee:example"]
 
   grunt.loadNpmTasks "grunt-contrib-coffee"
   grunt.loadNpmTasks "grunt-contrib-uglify"

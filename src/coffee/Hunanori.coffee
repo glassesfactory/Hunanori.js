@@ -4,16 +4,11 @@ do(window)->
     prefix: null
     constructor:()->
 
-    log:(msg, level)=>
-      if not Hunanori.debug
-        return
-      if @.prfix
-        console.log @.prefix
+    log:(msg, level)->
       Hunanori.log(msg, level)
-      if @.separator
-        console.log @.separator
 
     warn:(msg)=>
+
       @log(msg, Hunanori.WARINING)
 
     error:(msg)=>
@@ -33,19 +28,30 @@ do(window)->
 
   Hunanori.debug = true
   Hunanori.level = "info"
+  Hunanori.strict  = true
   Hunanori.logger = null
   Hunanori.prefix = null
   Hunanori.separator = null
+  Hunanori.stamp = false
+  Hunanori.dd = new Date()
+  Hunanori.fileName = "hunanori.min.js"
 
+  Hunanori.setup =(fileName)->
+    Hunanori.fileName = fileName
 
   Hunanori.log =(msg, level)=>
     if not Hunanori.debug
       return
+    if Hunanori.strict
+      stack = _getStack()
+      fileName = _getFilename(stack)
+
     if Hunanori.prefix
-      console.log prefix
-    Hunanori.doLogging(msg, level)
+      console.log Hunanori.prefix
+    Hunanori.doLogging(msg, level, fileName)
     if Hunanori.separator
       console.log Hunanori.separator
+    return
 
   Hunanori.warn =(msg)=>
     Hunanori.log(msg, Hunanori.WARINING)
@@ -53,16 +59,33 @@ do(window)->
   Hunanori.error =(msg)=>
     Hunanori.log(msg, Hunanori.ERROR)
 
-  Hunanori.doLogging =(msg, level)->
+
+
+  Hunanori.doLogging =(msg, level, fileName)=>
     if level and Hunanori.level isnt level
       logger = _createLogger(level)
     else
       if not Hunanori.logger
         Hunanori.logger = _createLogger(Hunanori.level)
       logger = Hunanori.logger
-    logger(msg)
+    if Hunanori.stamp
+      msg += "  [" + Hunanori.dd.toString() + "]"
 
-  _createLogger:(level)->
+    if Hunanori.strict
+      # Chrome と Firefox だけ…
+      # args = ["%c"+fileName, "color:red;font-weight:bold;", msg]
+      args = [fileName, msg]
+    else
+      args = [msg]
+    if logger.apply
+      logger.apply(console, args)
+    else
+      args = Array.prototype.slice.apply(args).join(' ')
+      logger(args)
+    return
+
+
+  _createLogger=(level)->
     if level not in Hunanori.LOG_LEVELS
       throw new Error("log level is undefined.")
 
@@ -72,5 +95,36 @@ do(window)->
       return console.error
     else if level is "warning"
       return console.warn
+
+
+  _getFilename=(stack)->
+    while stack.length > 0
+      str = stack.shift()
+      if str.indexOf('.js') < 0
+        continue
+      reg = new RegExp(Hunanori.fileName, "i")
+      if str.match(/.js/i) and not str.match(reg)
+        match = str.match(/\w+.js:\d+/)
+        fileName = match[0]
+        return fileName + "=> "
+    return
+
+
+  _getStack =()->
+    try
+      stack = new Error().stack.split('\n')
+      return stack
+    catch e
+      if e.hasOwnProperty("stack")
+        return e.stack.split('\n')
+      else
+        stack = []
+        caller = arguments.callee
+        while caller
+          stack.push caller.toString()
+          caller = caller.caller
+          console.log caller
+        return stack
+    return
 
   window.Hunanori = Hunanori
