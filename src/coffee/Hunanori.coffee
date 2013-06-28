@@ -8,7 +8,6 @@ do(window)->
       Hunanori.log(msg, level)
 
     warn:(msg)=>
-
       @log(msg, Hunanori.WARINING)
 
     error:(msg)=>
