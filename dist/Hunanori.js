@@ -49,26 +49,32 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   Hunanori.prefix = null;
   Hunanori.separator = null;
   Hunanori.stamp = false;
+  Hunanori.isLogStacking = false;
+  Hunanori.logStack = [];
+  Hunanori.maxLogStack = 20;
   Hunanori.dd = new Date();
   Hunanori.fileName = "hunanori.min.js";
   Hunanori.setup = function(fileName) {
     return Hunanori.fileName = fileName;
   };
   Hunanori.log = function(msg, level) {
-    var fileName, stack;
+    var fileName, logedMsg, stack;
 
-    if (!Hunanori.debug) {
-      return;
-    }
     if (Hunanori.strict) {
       stack = _getStack();
       fileName = _getFilename(stack);
     }
-    if (Hunanori.prefix) {
+    if (Hunanori.prefix && Hunanori.debug) {
       console.log(Hunanori.prefix);
     }
-    Hunanori.doLogging(msg, level, fileName);
-    if (Hunanori.separator) {
+    logedMsg = Hunanori.doLogging(msg, level, fileName);
+    if (Hunanori.isLogStacking) {
+      if (Hunanori.logStack.length >= Hunanori.maxLogStack) {
+        Hunanori.logStack.shift();
+      }
+      Hunanori.logStack.push(logedMsg);
+    }
+    if (Hunanori.separator && Hunanori.debug) {
       console.log(Hunanori.separator);
     }
   };
@@ -79,7 +85,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
     return Hunanori.log(msg, Hunanori.ERROR);
   };
   Hunanori.doLogging = function(msg, level, fileName) {
-    var args, logger;
+    var args, logger, msgObj, time;
 
     if (level && Hunanori.level !== level) {
       logger = _createLogger(level);
@@ -89,13 +95,22 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
       }
       logger = Hunanori.logger;
     }
+    msgObj = {
+      "fileName": fileName.replace('=> ', ''),
+      "msg": msg
+    };
     if (Hunanori.stamp) {
-      msg += "  [" + Hunanori.dd.toString() + "]";
+      time = Hunanori.dd.toString();
+      msg += "    [" + time + "]";
+      msgObj["loged_at"] = time;
     }
     if (Hunanori.strict) {
       args = [fileName, msg];
     } else {
       args = [msg];
+    }
+    if (!Hunanori.debug) {
+      return msgObj;
     }
     if (logger.apply) {
       logger.apply(console, args);
@@ -103,6 +118,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
       args = Array.prototype.slice.apply(args).join(' ');
       logger(args);
     }
+    return msgObj;
   };
   _createLogger = function(level) {
     if (__indexOf.call(Hunanori.LOG_LEVELS, level) < 0) {
