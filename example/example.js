@@ -7,14 +7,16 @@ var Example,
     var hoge;
 
     Hunanori.log("loaded");
-    hoge = new Example();
-    Hunanori.debug = true;
+    Hunanori.isLogStacking = true;
+    Hunanori.debug = false;
     Hunanori.stamp = true;
+    hoge = new Example();
     Hunanori.separator = "▂▅▇█▓▒░('ω')░▒▓█▇▅▂うわあああああああ";
     Hunanori.log("航路間違えた");
     hoge.abunai();
     Hunanori.prefix = "=͟͟͞͞─＝＿=͟͟͞͞￣三(Г ﾟ 〆ﾟ )Г=͟͟͞͞＿＝=͟͟͞͞─=͟͟͞͞三￣";
-    return hoge.yabai();
+    hoge.yabai();
+    return console.log(Hunanori.logStack);
   };
 })(window);
 

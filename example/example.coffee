@@ -2,10 +2,10 @@ do(window)->
   window.onload =()->
     # Hunanori.strict = false
     Hunanori.log "loaded"
-    hoge = new Example()
     Hunanori.isLogStacking = true
-    Hunanori.debug = true
+    Hunanori.debug = false
     Hunanori.stamp = true
+    hoge = new Example()
     Hunanori.separator = "▂▅▇█▓▒░('ω')░▒▓█▇▅▂うわあああああああ"
     Hunanori.log "航路間違えた"
     hoge.abunai()
