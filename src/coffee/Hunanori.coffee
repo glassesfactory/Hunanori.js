@@ -42,20 +42,20 @@ do(window)->
     Hunanori.fileName = fileName
 
   Hunanori.log =(msg, level)=>
-    if not Hunanori.debug
-      return
+    # if not Hunanori.debug
+    #   return
     if Hunanori.strict
       stack = _getStack()
       fileName = _getFilename(stack)
 
-    if Hunanori.prefix
+    if Hunanori.prefix and Hunanori.debug
       console.log Hunanori.prefix
     logedMsg = Hunanori.doLogging(msg, level, fileName)
     if Hunanori.isLogStacking
       if Hunanori.logStack.length >= Hunanori.maxLogStack
         Hunanori.logStack.shift()
       Hunanori.logStack.push logedMsg
-    if Hunanori.separator
+    if Hunanori.separator and Hunanori.debug
       console.log Hunanori.separator
     return
 
@@ -87,6 +87,8 @@ do(window)->
       args = [fileName, msg]
     else
       args = [msg]
+    if not Hunanori.debug
+      return msgObj
     if logger.apply
       logger.apply(console, args)
     else
