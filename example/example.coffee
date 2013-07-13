@@ -3,6 +3,7 @@ do(window)->
     # Hunanori.strict = false
     Hunanori.log "loaded"
     hoge = new Example()
+    Hunanori.isLogStacking = true
     Hunanori.debug = true
     Hunanori.stamp = true
     Hunanori.separator = "▂▅▇█▓▒░('ω')░▒▓█▇▅▂うわあああああああ"
@@ -10,6 +11,7 @@ do(window)->
     hoge.abunai()
     Hunanori.prefix = "=͟͟͞͞─＝＿=͟͟͞͞￣三(Г ﾟ 〆ﾟ )Г=͟͟͞͞＿＝=͟͟͞͞─=͟͟͞͞三￣"
     hoge.yabai()
+    console.log Hunanori.logStack
 ###
   Hunanori を継承したインスタンスを作るパターン
 ###
