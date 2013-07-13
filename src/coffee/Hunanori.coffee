@@ -32,6 +32,9 @@ do(window)->
   Hunanori.prefix = null
   Hunanori.separator = null
   Hunanori.stamp = false
+  Hunanori.isLogStacking = false
+  Hunanori.logStack = []
+  Hunanori.maxLogStack = 20
   Hunanori.dd = new Date()
   Hunanori.fileName = "hunanori.min.js"
 
@@ -47,7 +50,11 @@ do(window)->
 
     if Hunanori.prefix
       console.log Hunanori.prefix
-    Hunanori.doLogging(msg, level, fileName)
+    logedMsg = Hunanori.doLogging(msg, level, fileName)
+    if Hunanori.isLogStacking
+      if Hunanori.logStack.length >= Hunanori.maxLogStack
+        Hunanori.logStack.shift()
+      Hunanori.logStack.push logedMsg
     if Hunanori.separator
       console.log Hunanori.separator
     return
@@ -58,8 +65,6 @@ do(window)->
   Hunanori.error =(msg)=>
     Hunanori.log(msg, Hunanori.ERROR)
 
-
-
   Hunanori.doLogging =(msg, level, fileName)=>
     if level and Hunanori.level isnt level
       logger = _createLogger(level)
@@ -67,8 +72,14 @@ do(window)->
       if not Hunanori.logger
         Hunanori.logger = _createLogger(Hunanori.level)
       logger = Hunanori.logger
+    msgObj = {
+      "fileName":fileName.replace('=> ', '')
+      "msg":msg
+    }
     if Hunanori.stamp
-      msg += "  [" + Hunanori.dd.toString() + "]"
+      time = Hunanori.dd.toString()
+      msg += "    [" + time + "]"
+      msgObj["loged_at"] = time
 
     if Hunanori.strict
       # Chrome と Firefox だけ…
@@ -81,8 +92,7 @@ do(window)->
     else
       args = Array.prototype.slice.apply(args).join(' ')
       logger(args)
-    return
-
+    return msgObj
 
   _createLogger=(level)->
     if level not in Hunanori.LOG_LEVELS
