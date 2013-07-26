@@ -6,8 +6,8 @@
     "node_modules",
     "test",
     "examples",
-    "src"
-    "*.md"
+    "src",
+    "*.md",
     ".editorconfig",
     "*.coffee",
     "package.json"
