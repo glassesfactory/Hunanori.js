@@ -5,11 +5,12 @@
   "ignore": [
     "node_modules",
     "test",
-    "examples",
+    "example",
     "src",
     "*.md",
     ".editorconfig",
     "*.coffee",
+    ".gitignore",
     "package.json"
   ]
 }
